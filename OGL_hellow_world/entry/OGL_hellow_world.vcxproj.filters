@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\event_handlers">
+      <UniqueIdentifier>{93c13d0b-042a-4aaa-93de-4934f3c36047}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\GLAD">
+      <UniqueIdentifier>{3464154c-96c5-430d-af7e-6479156a1509}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\vertices">
+      <UniqueIdentifier>{fb20a069-c75f-48a2-9b6b-c5d5f752e548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders">
+      <UniqueIdentifier>{5262e9fa-75d9-4b10-9172-fe3911e220e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\debug">
+      <UniqueIdentifier>{2b2a463b-d18b-451c-9de4-91018491bfc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders\raw_shaders">
+      <UniqueIdentifier>{ccf0c70b-0c6a-4591-baea-edabbedabd49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\textures">
+      <UniqueIdentifier>{f21c7462-ea9b-44ff-aa34-7f18f3320949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\textures\STB">
+      <UniqueIdentifier>{9424ae35-2bec-48a8-af01-e7ad30484632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\camera">
+      <UniqueIdentifier>{7bf726ef-fa81-40d6-ab9d-0a3e95566e48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\assimp">
+      <UniqueIdentifier>{725be7b6-679e-46b7-a6ac-b18d950c107f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\mesh_model">
+      <UniqueIdentifier>{0398918f-1b70-4052-a2a8-58ebbc6300a9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main\main.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\event_handlers\eh_mainwindow.cpp">
+      <Filter>Resource Files\event_handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\GLAD\glad.c">
+      <Filter>Resource Files\GLAD</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\event_handlers\eh_buttonpresses.cpp">
+      <Filter>Resource Files\event_handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\debug\custom_debugging.cpp">
+      <Filter>Resource Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\shaders\fragment_shader.cpp">
+      <Filter>Resource Files\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\textures\STB\stb_image.cpp">
+      <Filter>Resource Files\textures\STB</Filter>
+    </ClCompile>
+    <ClCompile Include="main\illuminati_triangle.cpp">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\camera\camera_class.cpp">
+      <Filter>Resource Files\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\mesh_model\mesh.cpp">
+      <Filter>Resource Files\mesh_model</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\mesh_model\model.cpp">
+      <Filter>Resource Files\mesh_model</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resources\event_handlers\eh_mainwindow.h">
+      <Filter>Resource Files\event_handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\event_handlers\eh_buttonpresses.h">
+      <Filter>Resource Files\event_handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\vertices\raw_vertices.h">
+      <Filter>Resource Files\vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\debug\custom_debugging.h">
+      <Filter>Resource Files\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\shaders\shader_class.h">
+      <Filter>Resource Files\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\textures\STB\stb_image.h">
+      <Filter>Resource Files\textures\STB</Filter>
+    </ClInclude>
+    <ClInclude Include="main\illuminati_triangle.h">
+      <Filter>main</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\camera\camera_class.h">
+      <Filter>Resource Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\ai_assert.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\anim.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\camera.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\cexport.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\cfileio.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\cimport.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\color4.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\config.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\DefaultLogger.hpp">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\defs.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\Exporter.hpp">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\Importer.hpp">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\importerdesc.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\IOStream.hpp">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\IOSystem.hpp">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\light.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\Logger.hpp">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\LogStream.hpp">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\material.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\matrix3x3.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\matrix4x4.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\mesh.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\metadata.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\NullLogger.hpp">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\postprocess.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\ProgressHandler.hpp">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\quaternion.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\scene.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\texture.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\types.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\vector2.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\vector3.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\assimp\version.h">
+      <Filter>Resource Files\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\mesh_model\mesh.h">
+      <Filter>Resource Files\mesh_model</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\mesh_model\model.h">
+      <Filter>Resource Files\mesh_model</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\standard_3_3.fs">
+      <Filter>Resource Files\shaders\raw_shaders</Filter>
+    </None>
+    <None Include="resources\shaders\standard_3_3.vs">
+      <Filter>Resource Files\shaders\raw_shaders</Filter>
+    </None>
+    <None Include="resources\shaders\light_3_3.fs">
+      <Filter>Resource Files\shaders\raw_shaders</Filter>
+    </None>
+    <None Include="resources\shaders\light_3_3.vs">
+      <Filter>Resource Files\shaders\raw_shaders</Filter>
+    </None>
+    <None Include="resources\assimp\color4.inl">
+      <Filter>Resource Files\assimp</Filter>
+    </None>
+    <None Include="resources\assimp\material.inl">
+      <Filter>Resource Files\assimp</Filter>
+    </None>
+    <None Include="resources\assimp\matrix3x3.inl">
+      <Filter>Resource Files\assimp</Filter>
+    </None>
+    <None Include="resources\assimp\matrix4x4.inl">
+      <Filter>Resource Files\assimp</Filter>
+    </None>
+    <None Include="resources\assimp\quaternion.inl">
+      <Filter>Resource Files\assimp</Filter>
+    </None>
+    <None Include="resources\assimp\vector2.inl">
+      <Filter>Resource Files\assimp</Filter>
+    </None>
+    <None Include="resources\assimp\vector3.inl">
+      <Filter>Resource Files\assimp</Filter>
+    </None>
+  </ItemGroup>
+</Project>
