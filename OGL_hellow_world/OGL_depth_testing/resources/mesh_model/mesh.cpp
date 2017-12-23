@@ -38,8 +38,6 @@ void Mesh::Draw
 
 	for( unsigned int i = 0; i < textures.size(); i++ )
 	{
-		// activate proper texture unit
-		glActiveTexture( GL_TEXTURE0 + i );
 		// retrieve texture number ( diffuse_texture(N) )
 		string number;
 		string name = textures[i].type;
@@ -58,6 +56,8 @@ void Mesh::Draw
 			cout << "ERROR: Unknown texture type: " << name << endl;
 			assert_always();
 		}
+		// activate proper texture unit
+		glActiveTexture( GL_TEXTURE0 + i );
 		glBindTexture( GL_TEXTURE_2D, textures[i].id );
 	}
 	shader.set_int( "diffuseNr", diffuse_nr );

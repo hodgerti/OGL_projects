@@ -29,6 +29,8 @@ public:
 	glm::vec3 get_camera_pos();
 	glm::mat4 get_camera_view();
 	glm::mat4 get_camera_proj();
+	void set_camera_speed_mod( float val );
+	float get_camera_speed_mod();
 	void mouse_callback( GLFWwindow* window, double xpos, double ypos );
 	void process_button_presses( Buttonpress_eh *buttonpress_eh );
 	void calc_speed();
@@ -40,6 +42,7 @@ private:
 	glm::vec3 camera_pos    = glm::vec3(0.0f, 0.0f,  3.0f);
 	glm::vec3 camera_up     = glm::vec3(0.0f, 1.0f,  0.0f);
 	bool  firstMouse		= true;
+	float camera_speed_mod  = 1.0f;
 	float yaw				= -90.0f;
 	float pitch				=  0.0f;
 	float lastX				=  800.0f / 2.0;

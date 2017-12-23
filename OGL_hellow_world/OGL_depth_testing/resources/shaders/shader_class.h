@@ -16,7 +16,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 
-#define SHADER_START_LOC "C:/Users/id181/Documents/OGL_projects/OGL_depth_testing/OGL_depth_testing/resources/shaders/"
+#define SHADER_START_LOC "C:/Users/id181/Documents/OGL_projects/OGL_hellow_world/OGL_depth_testing/resources/shaders/"
 #define DFLT_VS_PATH SHADER_START_LOC"standard_3_3.vs"
 #define DFLT_FS_PATH SHADER_START_LOC"standard_3_3.fs"
 #define LIGHT_VS_PATH SHADER_START_LOC"light_3_3.vs"
@@ -37,7 +37,6 @@ public:
 	void set_int( const std::string &name, int value ) const;
 	void set_float( const std::string &name, float value ) const;
 	void set_vec3( const std::string &name, glm::vec3 value ) const;
-	void set_vec4(const std::string &name, glm::vec4 value ) const;
 	void set_mat4( const std::string &name, glm::mat4 value ) const;
 };
 

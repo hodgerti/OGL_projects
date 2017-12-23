@@ -14,14 +14,10 @@ out vec2 TexCoords;
 							
 void main()											
 {	
-	//put it in world space because that is where all the calculations are going to happen
 	FragPos = vec3( model * vec4(aPos, 1.0));
-
-	//handles scaling normal distortion
 	Normal = mat3(transpose(inverse(model))) * aNormal;
-
 	TexCoords = aTexCoords;
 														
-	gl_Position = proj * view * model * vec4(FragPos, 1.0);	
+	gl_Position = proj * view * vec4(FragPos, 1.0);	
 
 }

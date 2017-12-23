@@ -26,6 +26,21 @@ glm::mat4 Camera::get_camera_proj()
 {
 	return proj;
 }
+
+void Camera::set_camera_speed_mod
+( 
+float val 
+)
+{
+	camera_speed_mod = val;
+}
+
+float Camera::get_camera_speed_mod
+(
+)
+{
+	return camera_speed_mod;
+}
 /*****************************************************
 *	function name: mouse_callback
 *	description: callback to resize the OGL window afer a GLFW resize
@@ -112,7 +127,7 @@ void Camera::calc_speed
 	current_frame = (float)glfwGetTime();
 	delta_time = current_frame - last_frame;
 	last_frame = current_frame;
-	camera_speed = 2.5f * delta_time;
+	camera_speed = camera_speed_mod * delta_time;
 }
 
 /***************************************************************
@@ -125,6 +140,8 @@ int window_height,
 unsigned int ID
 )
 {
+	view = glm::mat4();
+	proj = glm::mat4();
 	view = glm::lookAt(	camera_pos,					// posistion
   						camera_pos + camera_front,	// target, translates target looking at with pos
   						camera_up );				// up
@@ -132,7 +149,6 @@ unsigned int ID
 
 	glUniformMatrix4fv( glGetUniformLocation(ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv( glGetUniformLocation(ID, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
-	glUniform3f( glGetUniformLocation(ID, "viewPos"), camera_pos.x, camera_pos.y, camera_pos.z );
 }
 
 void Camera::scroll_callback

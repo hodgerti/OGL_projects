@@ -45,54 +45,53 @@ struct DirLight {
 	vec3 specular;
 };
 
-// sun
 uniform DirLight sun;
 
-// flashlight
 uniform bool flashLightOnOff;
 uniform SpotLight flashLight;
 
-// point lights
 #define NR_POINT_LIGHTS 4
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 
-// camera posistion
 uniform vec3 viewPos;
 
-// model loading
 #define MAXIMUM_TEXTURE_UNITS 16 // guarenteed 16 texture unit support
 uniform sampler2D diffuseTextures[MAXIMUM_TEXTURE_UNITS];
 uniform sampler2D specularTextures[MAXIMUM_TEXTURE_UNITS];
 uniform int diffuseNr; // watch out for off by 1 error
 uniform int specularNr;
 
-// straight texture mapping
-uniform Material material;
-
-// all light sources currently use static shinines
 #define SHININESS 32.0
 
-// pipeline
 in vec3 Normal;
 in vec3 FragPos;
 in vec2 TexCoords;
 	
-// lighting helper functions
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 diffuseResult, vec3 specularResult);
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 diffuseResult, vec3 specularResult);	
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir, vec3 diffuseResult, vec3 specularResult);
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir, vec3 diffuseResult, vec3 specularResult);
-						
+							
 void main()											
-{		
-	vec3 diffuseResult = vec3(texture(material.texture_diffuse, TexCoords));
-	vec3 specularResult = vec3(texture(material.texture_specular, TexCoords));
+{	
+	// combine texture maps
+	vec3 diffuseResult = vec3(0.0, 0.0, 0.0);
+	vec3 specularResult = vec3(0.0, 0.0, 0.0);
+	
+	for ( int i = 1; i < diffuseNr; i++ )
+	{
+		diffuseResult += vec3(texture(diffuseTextures[i], TexCoords));
+	}
+	for ( int i = 1; i < specularNr; i++ )
+	{
+		specularResult += vec3(texture(specularTextures[i], TexCoords));
+	}
 
 	vec3 norm = normalize(Normal);
 	vec3 viewDir = normalize(FragPos - viewPos);
-	//vec3 result = vec3(0.0, 0.0, 0.0);
+	vec3 result = vec3(0.0, 0.0, 0.0);
 
-	vec3 result = CalcDirLight(sun, norm, viewDir, diffuseResult, specularResult);
-	if(false)
+	result = CalcDirLight(sun, norm, viewDir, diffuseResult, specularResult);
+	if(flashLightOnOff)
 	{
 		result += CalcSpotLight(flashLight, norm, viewDir, diffuseResult, specularResult);
 	}
@@ -111,7 +110,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec3 diffuseResult,
 	float diff = max(dot(normal, lightDir), 0.0);
 	//specular
 	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), SHININESS);
 	//combine results
 	vec3 ambient = light.ambient * diffuseResult;
 	vec3 diffuse = light.diffuse * diff * diffuseResult;
@@ -126,7 +125,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir, vec3 diffuseRes
 	float diff = max(dot(normal, lightDir), 0.0);
 	//specular
 	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), SHININESS);
 	//attenuation
 	float distance = length(light.posistion - FragPos);
 	float attenuation = 1.0 / ( light.constant + ( light.linear * distance ) + ( light.quadratic * distance * distance ) );
@@ -150,7 +149,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir, vec3 diffuseResul
 		float diff = max(dot(normal, lightDir), 0.0);
 		//specular
 		vec3 reflectDir = reflect(-lightDir, normal );
-		float spec = pow(max(dot(reflectDir, viewDir), 0.0), material.shininess);
+		float spec = pow(max(dot(reflectDir, viewDir), 0.0), SHININESS);
 		//attenuation
 		float distance = length(light.posistion - FragPos);
 		float attenuation = 1.0 / ( light.constant + ( light.linear * distance ) + ( light.quadratic * distance * distance ) );
@@ -164,7 +163,6 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir, vec3 diffuseResul
 		ambient *= attenuation;
 		diffuse *= attenuation;
 		specular *= attenuation;
-		ambient *= intensity;
 		diffuse *= intensity;
 		specular *= intensity;
 		return(ambient + diffuse + specular);

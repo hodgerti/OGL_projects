@@ -95,8 +95,8 @@ glm::mat4				trans;
 /*------------------------------------------
 -	Init local variables
 -------------------------------------------*/	
-window_width = 1920;
-window_height = 1080;
+window_width = 1200;
+window_height = 900;
 
 /*------------------------------------------
 -	Create GLFW window and contexts
