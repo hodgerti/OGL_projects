@@ -33,8 +33,9 @@
 #define TEXTURE_FILE_PATH "D:/OGL_projects/OGL_depth_testing/entry/resources/textures/"
 #define TEXTURE_METALBOX_PNG TEXTURE_FILE_PATH"metalbox_holes.png"
 #define TEXTURE_METALBOX_SPECULAR_PNG TEXTURE_FILE_PATH"metalbox_holes_specular.png"
-#define TEXTURE_SURFACE_PNG TEXTURE_FILE_PATH"black_diffuse_map.png"
-#define TEXTURE_SURFACE_SPECULAR_PNG TEXTURE_FILE_PATH"white_specular_map.png"
+#define TEXTURE_SURFACE_PNG TEXTURE_FILE_PATH"tile_diffuse.png"
+#define TEXTURE_SURFACE_SPECULAR_PNG TEXTURE_FILE_PATH"tile_specular.png"
+#define GRASS_PNG TEXTURE_FILE_PATH"grass.png"
 
 #define PI 3.14159265358979323846
 
@@ -66,7 +67,7 @@ glm::vec3 find_normal( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3 )
 
 unsigned int loadTexture(char const *path);
 
-glm::vec3 calc_color( float x, float y, float z );
+glm::vec4 calc_color( float x, float y, float z, float alpha = 1.0f );
 
 /*****************************************************
 *	Global event handlers
@@ -166,7 +167,7 @@ glEnableVertexAttribArray( 2 );
 glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 6 * sizeof(float) ) );
 glBindVertexArray( 0 );
 
-
+// plane VAO
 unsigned int VAO_plane, VBO_plane;
 glGenVertexArrays( 1, &VAO_plane );
 glGenBuffers( 1, &VBO_plane );
@@ -181,6 +182,29 @@ glEnableVertexAttribArray( 2 );
 glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 6 * sizeof(float) ) );
 glBindVertexArray( 0 );
 
+// grass VAO
+unsigned int VAO_grass, VBO_grass;
+glGenVertexArrays( 1, &VAO_grass );
+glGenBuffers( 1, &VBO_grass );
+glBindVertexArray( VAO_grass );
+glBindBuffer( GL_ARRAY_BUFFER, VBO_grass );
+glBufferData( GL_ARRAY_BUFFER, sizeof(grass_vertices), &grass_vertices, GL_STATIC_DRAW );
+glEnableVertexAttribArray( 0 );
+glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0 );
+glEnableVertexAttribArray( 1 );
+glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 3 * sizeof(float) ) );
+glEnableVertexAttribArray( 2 );
+glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 6 * sizeof(float) ) );
+glBindVertexArray( 0 );
+
+vector<glm::vec3> vegetation_pos;
+vegetation_pos.push_back(glm::vec3(-1.5f,  0.0f, -0.48f));
+vegetation_pos.push_back(glm::vec3( 1.5f,  0.0f,  0.51f));
+vegetation_pos.push_back(glm::vec3( 0.0f,  0.0f,  0.7f));
+vegetation_pos.push_back(glm::vec3(-0.3f,  0.0f, -2.3f));
+vegetation_pos.push_back(glm::vec3( 0.5f,  0.0f, -0.6f));
+
+
 /*------------------------------------------
 -	Load Textures
 -------------------------------------------*/
@@ -188,6 +212,7 @@ unsigned int cube_texture = loadTexture( TEXTURE_METALBOX_PNG );
 unsigned int cube_specular_texture = loadTexture( TEXTURE_METALBOX_SPECULAR_PNG );
 unsigned int surface_texture = loadTexture( TEXTURE_SURFACE_PNG );
 unsigned int surface_specular_texture = loadTexture( TEXTURE_SURFACE_SPECULAR_PNG );
+unsigned int grass_texture = loadTexture( GRASS_PNG );
 
 standard_shader.use();
 standard_shader.set_int( "material.texture_diffuse", 0 );
@@ -207,19 +232,12 @@ glDepthFunc( GL_LESS );
 -----------------------------------------------*/
 glEnable( GL_STENCIL_TEST );
 
-bool flashlight_on_off = false;
-
-vector <glm::vec3> vegetation;
-vegetation.push_back(glm::vec3(-1.5f,  0.0f, -0.48f));
-vegetation.push_back(glm::vec3( 1.5f,  0.0f,  0.51f));
-vegetation.push_back(glm::vec3( 0.0f,  0.0f,  0.7f));
-vegetation.push_back(glm::vec3(-0.3f,  0.0f, -2.3f));
-vegetation.push_back(glm::vec3( 0.5f,  0.0f, -0.6f));  
+bool flashlight_on_off = false; 
 
 while ( !glfwWindowShouldClose( window ) )
 {
 	glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	
 	/* check key inputs for this frame*/
 	buttonpress_eh->evnt_process_key_inputs();
@@ -245,17 +263,17 @@ while ( !glfwWindowShouldClose( window ) )
 	standard_shader.set_bool( "flashLightOnOff", flashlight_on_off );
 	if ( flashlight_on_off == true )
 	{
-		glm::vec3 flash_light_color = calc_color(255, 255, 255);
-		glm::vec3 diffuse_color = flash_light_color * glm::vec3(0.8f);
-		glm::vec3 ambient_color = diffuse_color * glm::vec3(0.5f);
+		glm::vec4 flash_light_color = calc_color(255, 255, 255);
+		glm::vec4 diffuse_color = flash_light_color * glm::vec4(0.8f, 0.8f, 0.8f, 1.0f);
+		glm::vec4 ambient_color = diffuse_color * glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
 
 		standard_shader.set_vec3( "flashLight.posistion", camera.get_camera_pos() );
 		standard_shader.set_vec3( "flashLight.direction", camera.get_camera_front() );
 		standard_shader.set_float( "flashLight.innerCutoff", glm::cos(glm::radians(12.5f) ) );
 		standard_shader.set_float( "flashLight.outerCutOff", glm::cos(glm::radians(17.5f) ) );
-		standard_shader.set_vec3( "flashLight.ambient", ambient_color );
-		standard_shader.set_vec3( "flashLight.diffuse", diffuse_color );
-		standard_shader.set_vec3( "flashLight.specular", glm::vec3( 1.0f, 1.0f, 1.0f ) );
+		standard_shader.set_vec4( "flashLight.ambient", ambient_color );
+		standard_shader.set_vec4( "flashLight.diffuse", diffuse_color );
+		standard_shader.set_vec4( "flashLight.specular", glm::vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
 		standard_shader.set_float( "flashLight.constant", 1.0f );
 		standard_shader.set_float( "flashLight.linear", 0.09f );
 		standard_shader.set_float( "flashLight.quadratic", 0.032f );
@@ -266,15 +284,15 @@ while ( !glfwWindowShouldClose( window ) )
 	-----------------------------------------------*/
 	for( int i = 0; i < 4; i++ )
 	{
-		glm::vec3 light_color = calc_color(255, 255, 255);
-		glm::vec3 diffuse_color = light_color * glm::vec3(0.3f);
-		glm::vec3 ambient_color = diffuse_color * glm::vec3(0.09f);
+		glm::vec4 light_color = calc_color(255, 255, 255);
+		glm::vec4 diffuse_color = light_color * glm::vec4(0.3f, 0.3f, 0.3f, 1.0f);
+		glm::vec4 ambient_color = diffuse_color * glm::vec4(0.09f, 0.09f, 0.09f, 1.0f);
 
 		std::string k = std::to_string(i);
 		standard_shader.set_vec3( "pointLights[" + k + "].posistion", pointLightPositions[0] );		 
-		standard_shader.set_vec3( "pointLights[" + k + "].ambient", ambient_color );
-		standard_shader.set_vec3( "pointLights[" + k + "].diffuse", diffuse_color );
-		standard_shader.set_vec3( "pointLights[" + k + "].specular", glm::vec3( 1.0f, 1.0f, 1.0f ) );	 
+		standard_shader.set_vec4( "pointLights[" + k + "].ambient", ambient_color );
+		standard_shader.set_vec4( "pointLights[" + k + "].diffuse", diffuse_color );
+		standard_shader.set_vec4( "pointLights[" + k + "].specular", glm::vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );	 
 		standard_shader.set_float( "pointLights[" + k + "].constant", 1.0f );
 		standard_shader.set_float( "pointLights[" + k + "].linear", 0.09f );
 		standard_shader.set_float( "pointLights[" + k + "].quadratic", 0.032f );
@@ -283,60 +301,48 @@ while ( !glfwWindowShouldClose( window ) )
 	/*----------------------------------------------
 	- sun
 	-----------------------------------------------*/
-	standard_shader.set_vec3( "sun.direction", glm::vec3( -0.2f, -1.0f, -0.3f ) );
-	standard_shader.set_vec3( "sun.ambient", glm::vec3( 0.05f, 0.05f, 0.05f ) );
-	standard_shader.set_vec3( "sun.diffuse", glm::vec3( 0.4f, 0.4f, 0.4f ) );
-	standard_shader.set_vec3( "sun.specular", glm::vec3( 0.5f, 0.5f, 0.5f ) );
+	standard_shader.set_vec4( "sun.direction", glm::vec4( -0.2f, -1.0f, -0.3f, 1.0f ) );
+	standard_shader.set_vec4( "sun.ambient", glm::vec4( 0.05f, 0.05f, 0.05f, 1.0f ) );
+	standard_shader.set_vec4( "sun.diffuse", glm::vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+	standard_shader.set_vec4( "sun.specular", glm::vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
 
 	/*----------------------------------------------
 	- render
 	-----------------------------------------------*/
+	// cube
+	glBindVertexArray( VAO_cube );
+	glActiveTexture( GL_TEXTURE0 );
+	glBindTexture( GL_TEXTURE_2D, cube_texture );
+	glActiveTexture( GL_TEXTURE1 );
+	glBindTexture( GL_TEXTURE_2D, cube_specular_texture );
+	model = glm::mat4();
+	model = glm::translate( model, glm::vec3( 0.0f, 0.01f, 0.0f ) );
+	standard_shader.set_mat4( "model", model );
+	glDrawArrays( GL_TRIANGLES, 0, 36 );
+
 	// surface
-	glStencilFunc( GL_ALWAYS, 1, 0xff );
-	glStencilOpSeparate( GL_BACK, GL_KEEP, GL_REPLACE, GL_REPLACE );
-	glStencilOpSeparate( GL_FRONT, GL_KEEP, GL_KEEP, GL_KEEP );
-	glStencilMask( 0xff );
-	glDepthMask( GL_FALSE );
 	glBindVertexArray( VAO_plane );
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_2D, surface_texture );
 	glActiveTexture( GL_TEXTURE1 );
 	glBindTexture( GL_TEXTURE_2D, surface_specular_texture );
 	model = glm::mat4();
-	model = glm::translate( model, glm::vec3(0.0f, 0.2499f, 0.0f ) );
-	model = glm::scale( model, glm::vec3(1.5f) );
-    standard_shader.set_mat4( "model", model );
-	standard_shader.set_bool( "dimmer_on", 0 );
-    glDrawArrays( GL_TRIANGLES, 0, 36 );
+	model = glm::translate( model, glm::vec3( 0.0f, 1.5f, 0.0f ) );
+	model = glm::scale( model, glm::vec3(4.0f) );
+	standard_shader.set_mat4( "model", model );
+	glDrawArrays( GL_TRIANGLES, 0, 6 );
 
-	// reflection
-	glStencilFunc( GL_EQUAL, 1, 0xff );
-	glStencilMask( 0x00 );
-	glDepthMask( GL_TRUE );
-
-	glBindVertexArray( VAO_cube );
+	// grass
+	glBindVertexArray( VAO_grass );
 	glActiveTexture( GL_TEXTURE0 );
-	glBindTexture( GL_TEXTURE_2D, cube_texture );
-	glActiveTexture( GL_TEXTURE1 );
-	glBindTexture( GL_TEXTURE_2D, cube_specular_texture );
-	model = glm::mat4();
-	model = glm::translate( model, glm::vec3(0.0f, -0.5f, 0.0f ) );
-    standard_shader.set_mat4( "model", model );
-	standard_shader.set_float( "dimmer", 0.05f );
-	standard_shader.set_bool( "dimmer_on", 1 );
-    glDrawArrays( GL_TRIANGLES, 0, 36 );
-
-	// cube
-	glStencilFunc( GL_ALWAYS, 1, 0xff );
-	glBindVertexArray( VAO_cube );
-	glActiveTexture( GL_TEXTURE0 );
-	glBindTexture( GL_TEXTURE_2D, cube_texture );
-	glActiveTexture( GL_TEXTURE1 );
-	glBindTexture( GL_TEXTURE_2D, cube_specular_texture );
-	model = glm::mat4();
-    standard_shader.set_mat4( "model", model );
-	standard_shader.set_bool( "dimmer_on", 0 );
-    glDrawArrays( GL_TRIANGLES, 0, 36 );
+	glBindTexture( GL_TEXTURE_2D, grass_texture );
+	for( int i = 0; i < 4; i++ )
+	{
+		model = glm::mat4();
+		model = glm::translate( model, vegetation_pos[i] );
+		standard_shader.set_mat4( "model", model );
+		glDrawArrays( GL_TRIANGLES, 0, 6 );
+	}
 
 
 	glStencilMask( 0xff );
@@ -357,9 +363,9 @@ glfwTerminate();
 return 0;
 }
 
-glm::vec3 calc_color( float x, float y, float z )
+glm::vec4 calc_color( float x, float y, float z, float alpha )
 {
-	return( glm::vec3(x/255, y/255, z/255));
+	return( glm::vec4(x/255, y/255, z/255, alpha));
 }
 
 // utility function for loading a 2D texture from file

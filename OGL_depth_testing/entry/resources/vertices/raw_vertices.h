@@ -162,4 +162,14 @@ float mirror_vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f
 };
 
+float grass_vertices[] = {
+	 // posistions		  // normals    	   // texture coords
+	0.0f,  0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+	0.0f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+	1.0f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+
+	0.0f,  0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+	1.0f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+	1.0f,  0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f
+};
 #endif
