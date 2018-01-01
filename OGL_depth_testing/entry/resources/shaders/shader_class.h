@@ -19,8 +19,8 @@
 #define SHADER_START_LOC "D:/OGL_projects/OGL_depth_testing/entry/resources/shaders/"
 #define DFLT_VS_PATH SHADER_START_LOC"standard_3_3.vs"
 #define DFLT_FS_PATH SHADER_START_LOC"standard_3_3.fs"
-#define LIGHT_VS_PATH SHADER_START_LOC"light_3_3.vs"
-#define LIGHT_FS_PATH SHADER_START_LOC"light_3_3.fs"
+#define SINGLE_COLOR_VS_PATH SHADER_START_LOC"standard_3_3.vs"
+#define SINGLE_COLOR_FS_PATH SHADER_START_LOC"single_color_3_3.fs"
 
 class Shader
 {

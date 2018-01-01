@@ -132,7 +132,6 @@ unsigned int ID
 
 	glUniformMatrix4fv( glGetUniformLocation(ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv( glGetUniformLocation(ID, "proj"), 1, GL_FALSE, glm::value_ptr(proj));
-	glUniform3f( glGetUniformLocation(ID, "viewPos"), camera_pos.x, camera_pos.y, camera_pos.z );
 }
 
 void Camera::scroll_callback

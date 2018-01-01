@@ -140,6 +140,7 @@ float cube_vertices_ogl[] = {
     -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
 };
 
+
 float plane_vertices[] = {
 	 // posistions        // texture coords
      5.0f, -0.501f,  5.0f,  2.0f, 0.0f,
@@ -149,6 +150,16 @@ float plane_vertices[] = {
      5.0f, -0.501f,  5.0f,  2.0f, 0.0f,
 	-5.0f, -0.501f, -5.0f,  0.0f, 2.0f,
      5.0f, -0.501f, -5.0f,  2.0f, 2.0f								
+};
+
+float mirror_vertices[] = {
+	 // posistions		  // normals    	   // texture coords
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f
 };
 
 #endif

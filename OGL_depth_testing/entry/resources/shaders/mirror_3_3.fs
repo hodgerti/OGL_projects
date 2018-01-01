@@ -45,36 +45,11 @@ struct DirLight {
 	vec3 specular;
 };
 
-// sun
-uniform DirLight sun;
-
-// flashlight
-uniform bool flashLightOnOff;
-uniform SpotLight flashLight;
-
-// point lights
-#define NR_POINT_LIGHTS 4
-uniform PointLight pointLights[NR_POINT_LIGHTS];
-
-// camera posistion
-uniform vec3 viewPos;
-
-// model loading
-#define MAXIMUM_TEXTURE_UNITS 16 // guarenteed 16 texture unit support
-uniform sampler2D diffuseTextures[MAXIMUM_TEXTURE_UNITS];
-uniform sampler2D specularTextures[MAXIMUM_TEXTURE_UNITS];
-uniform int diffuseNr; // watch out for off by 1 error
-uniform int specularNr;
-
-// straight texture mapping
-uniform Material material;
-
 // all light sources currently use static shinines
 #define SHININESS 32.0
 
-// dimmer for reflection
-uniform float dimmer;
-uniform bool dimmer_on;
+// camera posistion
+uniform vec3 viewPos;
 
 // pipeline
 in vec3 Normal;
@@ -88,30 +63,8 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir, vec3 diffuseResul
 						
 void main()											
 {		
-	vec3 diffuseResult = texture(material.texture_diffuse, TexCoords);
-	vec3 specularResult = texture(material.texture_specular, TexCoords);
-
-	FragColor = diffuseResult;
-	return;
-
-	vec3 norm = normalize(Normal);
 	vec3 viewDir = normalize(FragPos - viewPos);
-	//vec3 result = vec3(0.0, 0.0, 0.0);
-
-	vec3 result = CalcDirLight(sun, norm, viewDir, diffuseResult, specularResult);
-	if(false)
-	{
-		result += CalcSpotLight(flashLight, norm, viewDir, diffuseResult, specularResult);
-	}
-	for(int i = 0; i < NR_POINT_LIGHTS; i++ )
-	{
-		result += CalcPointLight(pointLights[i], norm, viewDir, diffuseResult, specularResult);
-	}
-
-	if ( dimmer_on )
-	{
-		result *= dimmer;
-	}
+	vec3 reflectDir = reflect(-viewDir, normal );
 
 	FragColor = vec4(result, 1.0);
 }

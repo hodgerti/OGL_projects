@@ -192,6 +192,8 @@
     <None Include="resources\assimp\vector3.inl" />
     <None Include="resources\shaders\light_3_3.fs" />
     <None Include="resources\shaders\light_3_3.vs" />
+    <None Include="resources\shaders\mirror_3_3.fs" />
+    <None Include="resources\shaders\single_color_3_3.fs" />
     <None Include="resources\shaders\standard_3_3.fs" />
     <None Include="resources\shaders\standard_3_3.vs" />
   </ItemGroup>

@@ -243,5 +243,11 @@
     <None Include="resources\assimp\vector3.inl">
       <Filter>Resource Files\assimp</Filter>
     </None>
+    <None Include="resources\shaders\single_color_3_3.fs">
+      <Filter>Resource Files\shaders\raw_shaders</Filter>
+    </None>
+    <None Include="resources\shaders\mirror_3_3.fs">
+      <Filter>Resource Files\shaders\raw_shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
