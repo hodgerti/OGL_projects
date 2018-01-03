@@ -25,6 +25,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <mesh_model/mesh.h>
+#include <map>
 #include "./illuminati_triangle.h"
 
 /*****************************************************
@@ -35,7 +36,7 @@
 #define TEXTURE_METALBOX_SPECULAR_PNG TEXTURE_FILE_PATH"metalbox_holes_specular.png"
 #define TEXTURE_SURFACE_PNG TEXTURE_FILE_PATH"tile_diffuse.png"
 #define TEXTURE_SURFACE_SPECULAR_PNG TEXTURE_FILE_PATH"tile_specular.png"
-#define GRASS_PNG TEXTURE_FILE_PATH"grass.png"
+#define WINDOW_PNG TEXTURE_FILE_PATH"blending_transparent_window.png"
 
 #define PI 3.14159265358979323846
 
@@ -183,12 +184,12 @@ glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 6 *
 glBindVertexArray( 0 );
 
 // grass VAO
-unsigned int VAO_grass, VBO_grass;
-glGenVertexArrays( 1, &VAO_grass );
-glGenBuffers( 1, &VBO_grass );
-glBindVertexArray( VAO_grass );
-glBindBuffer( GL_ARRAY_BUFFER, VBO_grass );
-glBufferData( GL_ARRAY_BUFFER, sizeof(grass_vertices), &grass_vertices, GL_STATIC_DRAW );
+unsigned int VAO_window, VBO_window;
+glGenVertexArrays( 1, &VAO_window );
+glGenBuffers( 1, &VBO_window );
+glBindVertexArray( VAO_window );
+glBindBuffer( GL_ARRAY_BUFFER, VBO_window );
+glBufferData( GL_ARRAY_BUFFER, sizeof(window_vertices), &window_vertices, GL_STATIC_DRAW );
 glEnableVertexAttribArray( 0 );
 glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0 );
 glEnableVertexAttribArray( 1 );
@@ -197,12 +198,12 @@ glEnableVertexAttribArray( 2 );
 glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 6 * sizeof(float) ) );
 glBindVertexArray( 0 );
 
-vector<glm::vec3> vegetation_pos;
-vegetation_pos.push_back(glm::vec3(-1.5f,  0.0f, -0.48f));
-vegetation_pos.push_back(glm::vec3( 1.5f,  0.0f,  0.51f));
-vegetation_pos.push_back(glm::vec3( 0.0f,  0.0f,  0.7f));
-vegetation_pos.push_back(glm::vec3(-0.3f,  0.0f, -2.3f));
-vegetation_pos.push_back(glm::vec3( 0.5f,  0.0f, -0.6f));
+vector<glm::vec3> windows;
+windows.push_back(glm::vec3(-1.5f,  0.0f, -0.48f));
+windows.push_back(glm::vec3( 1.5f,  0.0f,  0.51f));
+windows.push_back(glm::vec3( 0.0f,  0.0f,  0.7f));
+windows.push_back(glm::vec3(-0.3f,  0.0f, -2.3f));
+windows.push_back(glm::vec3( 0.5f,  0.0f, -0.6f));
 
 
 /*------------------------------------------
@@ -212,7 +213,7 @@ unsigned int cube_texture = loadTexture( TEXTURE_METALBOX_PNG );
 unsigned int cube_specular_texture = loadTexture( TEXTURE_METALBOX_SPECULAR_PNG );
 unsigned int surface_texture = loadTexture( TEXTURE_SURFACE_PNG );
 unsigned int surface_specular_texture = loadTexture( TEXTURE_SURFACE_SPECULAR_PNG );
-unsigned int grass_texture = loadTexture( GRASS_PNG );
+unsigned int window_texture = loadTexture( WINDOW_PNG );
 
 standard_shader.use();
 standard_shader.set_int( "material.texture_diffuse", 0 );
@@ -231,6 +232,12 @@ glDepthFunc( GL_LESS );
 - depth testing setup
 -----------------------------------------------*/
 glEnable( GL_STENCIL_TEST );
+
+/*----------------------------------------------
+- blending
+-----------------------------------------------*/
+glEnable( GL_BLEND );
+glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
 bool flashlight_on_off = false; 
 
@@ -333,13 +340,22 @@ while ( !glfwWindowShouldClose( window ) )
 	glDrawArrays( GL_TRIANGLES, 0, 6 );
 
 	// grass
-	glBindVertexArray( VAO_grass );
+	glBindVertexArray( VAO_window );
 	glActiveTexture( GL_TEXTURE0 );
-	glBindTexture( GL_TEXTURE_2D, grass_texture );
-	for( int i = 0; i < 4; i++ )
+	glBindTexture( GL_TEXTURE_2D, window_texture );
+	glActiveTexture( GL_TEXTURE1 );
+	glBindTexture( GL_TEXTURE_2D, 0 );
+	std::map<float, glm::vec3> sorted;
+	for( unsigned int i = 0; i < windows.size(); i++ )
+	{
+		float dist = glm::length( camera.get_camera_pos() - windows[i] );
+		sorted[dist] = windows[i];
+	}
+
+	for( std::map<float, glm::vec3>::reverse_iterator i = sorted.rbegin(); i != sorted.rend(); ++i )
 	{
 		model = glm::mat4();
-		model = glm::translate( model, vegetation_pos[i] );
+		model = glm::translate( model, i->second );
 		standard_shader.set_mat4( "model", model );
 		glDrawArrays( GL_TRIANGLES, 0, 6 );
 	}
@@ -391,8 +407,8 @@ unsigned int loadTexture(char const *path)
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
