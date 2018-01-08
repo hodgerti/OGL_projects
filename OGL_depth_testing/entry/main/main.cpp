@@ -149,6 +149,7 @@ if ( !gladLoadGLLoader( ( GLADloadproc ) glfwGetProcAddress ) )
 glViewport(0, 0, 800, 600);
 
 Shader standard_shader( DFLT_VS_PATH, DFLT_FS_PATH );
+Shader screen_shader( SCREEN_VS_PATH, SCREEN_FS_PATH );
 
 /*------------------------------------------
 -	Create VAO's
@@ -183,20 +184,17 @@ glEnableVertexAttribArray( 2 );
 glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 6 * sizeof(float) ) );
 glBindVertexArray( 0 );
 
-// grass VAO
-unsigned int VAO_window, VBO_window;
-glGenVertexArrays( 1, &VAO_window );
-glGenBuffers( 1, &VBO_window );
-glBindVertexArray( VAO_window );
-glBindBuffer( GL_ARRAY_BUFFER, VBO_window );
-glBufferData( GL_ARRAY_BUFFER, sizeof(window_vertices), &window_vertices, GL_STATIC_DRAW );
+// quad VAO
+unsigned int VAO_quad, VBO_quad;
+glGenVertexArrays( 1, &VAO_quad );
+glGenBuffers( 1, &VBO_quad );
+glBindVertexArray( VBO_quad );
+glBindBuffer( GL_ARRAY_BUFFER, VBO_quad );
+glBufferData( GL_ARRAY_BUFFER, sizeof( quad_vertices ), &quad_vertices, GL_STATIC_DRAW );
 glEnableVertexAttribArray( 0 );
-glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0 );
+glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0 );
 glEnableVertexAttribArray( 1 );
-glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 3 * sizeof(float) ) );
-glEnableVertexAttribArray( 2 );
-glVertexAttribPointer( 2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)( 6 * sizeof(float) ) );
-glBindVertexArray( 0 );
+glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)( 2 * sizeof(float) ) );
 
 vector<glm::vec3> windows;
 windows.push_back(glm::vec3(-1.5f,  0.0f, -0.48f));
@@ -205,6 +203,39 @@ windows.push_back(glm::vec3( 0.0f,  0.0f,  0.7f));
 windows.push_back(glm::vec3(-0.3f,  0.0f, -2.3f));
 windows.push_back(glm::vec3( 0.5f,  0.0f, -0.6f));
 
+/*----------------------------------------------
+-  FBO
+-----------------------------------------------*/
+// create framebuffer and bind it
+unsigned int framebuffer;
+glGenFramebuffers( 1, &framebuffer );
+glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
+// generate a color buffer texture attachment
+unsigned int tex_color_buffer;
+glGenTextures( 1, &tex_color_buffer );
+glBindTexture( GL_TEXTURE_2D, tex_color_buffer );
+glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, window_width, window_height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
+glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+glBindTexture( GL_TEXTURE_2D, 0 );
+
+glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex_color_buffer, 0 );
+// generate a depth/stencil render buffer attachment
+unsigned int rbo;
+glGenRenderbuffers( 1, &rbo );
+glBindRenderbuffer( GL_RENDERBUFFER, rbo );
+glRenderbufferStorage( GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, window_width, window_height );
+glBindRenderbuffer( GL_RENDERBUFFER, 0 );
+
+glFramebufferRenderbuffer( GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo );
+// check framebuffer completeness
+if ( glCheckFramebufferStatus( GL_FRAMEBUFFER ) != GL_FRAMEBUFFER_COMPLETE )
+{
+	printf( "ERROR::FRAMEBUFFER:: Framebuffer is not complete!\n" );
+	assert_always();
+}
+// unbind framebuffer
+glBindFramebuffer( GL_FRAMEBUFFER, 0 );
 
 /*------------------------------------------
 -	Load Textures
@@ -213,12 +244,14 @@ unsigned int cube_texture = loadTexture( TEXTURE_METALBOX_PNG );
 unsigned int cube_specular_texture = loadTexture( TEXTURE_METALBOX_SPECULAR_PNG );
 unsigned int surface_texture = loadTexture( TEXTURE_SURFACE_PNG );
 unsigned int surface_specular_texture = loadTexture( TEXTURE_SURFACE_SPECULAR_PNG );
-unsigned int window_texture = loadTexture( WINDOW_PNG );
 
 standard_shader.use();
 standard_shader.set_int( "material.texture_diffuse", 0 );
 standard_shader.set_int( "material.texture_specular", 1 );
 standard_shader.set_float( "material.shininess", 16.0f );
+
+screen_shader.use();
+screen_shader.set_int( "screenTexture", 0 );
 
 Buttonpress_eh *buttonpress_eh = new Buttonpress_eh( window );
 
@@ -228,24 +261,10 @@ Buttonpress_eh *buttonpress_eh = new Buttonpress_eh( window );
 glEnable( GL_DEPTH_TEST ); 
 glDepthFunc( GL_LESS );
 
-/*----------------------------------------------
-- depth testing setup
------------------------------------------------*/
-glEnable( GL_STENCIL_TEST );
-
-/*----------------------------------------------
-- blending
------------------------------------------------*/
-glEnable( GL_BLEND );
-glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-
 bool flashlight_on_off = false; 
 
 while ( !glfwWindowShouldClose( window ) )
 {
-	glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-	
 	/* check key inputs for this frame*/
 	buttonpress_eh->evnt_process_key_inputs();
 
@@ -316,6 +335,10 @@ while ( !glfwWindowShouldClose( window ) )
 	/*----------------------------------------------
 	- render
 	-----------------------------------------------*/
+	glBindFramebuffer( GL_FRAMEBUFFER, framebuffer );
+	glEnable( GL_DEPTH_TEST ); 
+	glClearColor( 0.1f, 0.1f, 0.1f, 1.0f );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	// cube
 	glBindVertexArray( VAO_cube );
 	glActiveTexture( GL_TEXTURE0 );
@@ -339,29 +362,16 @@ while ( !glfwWindowShouldClose( window ) )
 	standard_shader.set_mat4( "model", model );
 	glDrawArrays( GL_TRIANGLES, 0, 6 );
 
-	// grass
-	glBindVertexArray( VAO_window );
+	glBindFramebuffer( GL_FRAMEBUFFER, 0 );
+	glDisable( GL_DEPTH_TEST );
+	glClearColor( 1.0f, 1.0f, 1.0f, 1.0f );  
+	glClear( GL_COLOR_BUFFER_BIT );
+
+	screen_shader.use();
+	glBindVertexArray( VAO_quad );
 	glActiveTexture( GL_TEXTURE0 );
-	glBindTexture( GL_TEXTURE_2D, window_texture );
-	glActiveTexture( GL_TEXTURE1 );
-	glBindTexture( GL_TEXTURE_2D, 0 );
-	std::map<float, glm::vec3> sorted;
-	for( unsigned int i = 0; i < windows.size(); i++ )
-	{
-		float dist = glm::length( camera.get_camera_pos() - windows[i] );
-		sorted[dist] = windows[i];
-	}
-
-	for( std::map<float, glm::vec3>::reverse_iterator i = sorted.rbegin(); i != sorted.rend(); ++i )
-	{
-		model = glm::mat4();
-		model = glm::translate( model, i->second );
-		standard_shader.set_mat4( "model", model );
-		glDrawArrays( GL_TRIANGLES, 0, 6 );
-	}
-
-
-	glStencilMask( 0xff );
+	glBindTexture( GL_TEXTURE_2D, tex_color_buffer );
+	glDrawArrays( GL_TRIANGLES, 0, 6 );
 
 	// swap buffers and prepare for next render
 	glfwSwapBuffers( window );
@@ -371,8 +381,13 @@ while ( !glfwWindowShouldClose( window ) )
 
 glDeleteVertexArrays( 1, &VAO_plane );
 glDeleteVertexArrays( 1, &VAO_cube );
+glDeleteVertexArrays( 1, &VAO_quad );
+glDeleteFramebuffers( 1, &framebuffer );
 glDeleteBuffers( 1, &VBO_plane );
 glDeleteBuffers( 1, &VBO_cube );
+glDeleteBuffers( 1, &VBO_quad );
+glDeleteRenderbuffers( 1, &rbo );
+glDeleteTextures( 1, &tex_color_buffer );
 
 glfwTerminate();
 

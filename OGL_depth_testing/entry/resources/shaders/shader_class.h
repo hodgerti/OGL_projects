@@ -21,6 +21,8 @@
 #define DFLT_FS_PATH SHADER_START_LOC"standard_3_3.fs"
 #define SINGLE_COLOR_VS_PATH SHADER_START_LOC"standard_3_3.vs"
 #define SINGLE_COLOR_FS_PATH SHADER_START_LOC"single_color_3_3.fs"
+#define SCREEN_VS_PATH SHADER_START_LOC"screen_3_3.vs"
+#define SCREEN_FS_PATH SHADER_START_LOC"screen_3_3.fs"
 
 class Shader
 {

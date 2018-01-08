@@ -172,4 +172,15 @@ float window_vertices[] = {
 	1.0f, -0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
 	1.0f,  0.5f,  0.0f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f
 };
+
+float quad_vertices[] = { 
+    // positions   // texCoords
+    -1.0f,  1.0f,  0.0f, 1.0f,
+    -1.0f, -1.0f,  0.0f, 0.0f,
+     1.0f, -1.0f,  1.0f, 0.0f,
+
+    -1.0f,  1.0f,  0.0f, 1.0f,
+     1.0f, -1.0f,  1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f, 1.0f
+};
 #endif
