@@ -87,10 +87,10 @@ void main()
 	vec4 diffuseResult = texture(material.texture_diffuse, TexCoords);
 	vec4 specularResult = texture(material.texture_specular, TexCoords);
 
-	if ( diffuseResult.a < 0.01 )
-	{
-		discard;
-	}
+//	if ( diffuseResult.a <= 0.001 )
+//	{
+//		discard;
+//	}
 
 	vec3 norm = normalize(Normal);
 	vec3 viewDir = normalize(FragPos - viewPos);

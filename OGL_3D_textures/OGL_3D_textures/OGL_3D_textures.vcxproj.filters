@@ -223,5 +223,23 @@
     <None Include="..\entry\resources\shaders\standard_3_3.vs">
       <Filter>resources\shaders</Filter>
     </None>
+    <None Include="..\entry\resources\shaders\3d_3_3.fs">
+      <Filter>resources\shaders</Filter>
+    </None>
+    <None Include="..\entry\resources\shaders\3d_3_3.vs">
+      <Filter>resources\shaders</Filter>
+    </None>
+    <None Include="..\entry\resources\shaders\mirror_3_3.fs">
+      <Filter>resources\shaders</Filter>
+    </None>
+    <None Include="..\entry\resources\shaders\mirror_3_3.vs">
+      <Filter>resources\shaders</Filter>
+    </None>
+    <None Include="..\entry\resources\shaders\refraction_3_3.fs">
+      <Filter>resources\shaders</Filter>
+    </None>
+    <None Include="..\entry\resources\shaders\refraction_3_3.vs">
+      <Filter>resources\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

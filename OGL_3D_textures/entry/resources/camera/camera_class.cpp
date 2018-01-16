@@ -149,6 +149,64 @@ double yoffset
 		fov = 45.0f;
 }
 
+glm::vec3 find_look_direction
+(
+	int dir
+)
+{
+	if( dir == FACE_RIGHT )
+	{
+		return glm::vec3( 1.0, 0.0, 0.0 );
+	}
+	else if( dir == FACE_LEFT )
+	{
+		return glm::vec3( -1.0, 0.0, 0.0 );
+	}
+	else if( dir == FACE_UP )
+	{
+		return glm::vec3( 0.0, 1.0, 0.0 );
+	}
+	else if( dir == FACE_DOWN )
+	{
+		return glm::vec3( 0.0, -1.0, 0.0 );
+	}
+	else if( dir == FACE_BACK )
+	{
+		return glm::vec3( 0.0, 0.0, -1.0 );
+	}
+	else if( dir == FACE_FRONT )
+	{
+		return glm::vec3( 0.0, 0.0, 1.0 );
+	}
+	else
+	{
+		assert_always();
+	}
+}
+
+void Camera::mirror
+( 
+int dir, 
+glm::vec3 pos,
+int window_width,
+int window_height,
+unsigned int ID
+)
+{
+	glm::vec3 look_dir = find_look_direction( dir );
+	
+	view_local = glm::lookAt(	
+								pos,					// posistion
+  								pos + look_dir,			// target
+  								camera_up				// up
+							);			
+	proj_local = glm::perspective( glm::radians(45.0f), (float)window_width/(float)window_height, 0.01f, 100.0f );
+
+	glUniformMatrix4fv( glGetUniformLocation(ID, "view"), 1, GL_FALSE, glm::value_ptr(view_local));
+	glUniformMatrix4fv( glGetUniformLocation(ID, "proj"), 1, GL_FALSE, glm::value_ptr(proj_local));
+	
+}
+
 Camera::Camera()
 {
 

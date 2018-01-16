@@ -138,8 +138,12 @@ Mesh Model::process_mesh
 		/* load diffuse texture map		*/
 		vector<Texture> diffuse_maps = load_material_textures( material, aiTextureType_DIFFUSE, "texture_diffuse" );
 		textures.insert( textures.end(), diffuse_maps.begin(), diffuse_maps.end() );
+		/* load specular texture map		*/
 		vector<Texture> specular_maps = load_material_textures( material, aiTextureType_SPECULAR, "texture_specular" );
 		textures.insert( textures.end(), specular_maps.begin(), specular_maps.end() );
+		/* load REFLECTIVE texture map		*/
+		vector<Texture> reflective_maps = load_material_textures( material, aiTextureType_AMBIENT, "texture_reflective" );
+		textures.insert( textures.end(), reflective_maps.begin(), reflective_maps.end() );
 	}
 
 	return Mesh( vertices, indices, textures );

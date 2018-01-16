@@ -180,6 +180,12 @@
     <None Include="..\entry\resources\assimp\quaternion.inl" />
     <None Include="..\entry\resources\assimp\vector2.inl" />
     <None Include="..\entry\resources\assimp\vector3.inl" />
+    <None Include="..\entry\resources\shaders\3d_3_3.fs" />
+    <None Include="..\entry\resources\shaders\3d_3_3.vs" />
+    <None Include="..\entry\resources\shaders\mirror_3_3.fs" />
+    <None Include="..\entry\resources\shaders\mirror_3_3.vs" />
+    <None Include="..\entry\resources\shaders\refraction_3_3.fs" />
+    <None Include="..\entry\resources\shaders\refraction_3_3.vs" />
     <None Include="..\entry\resources\shaders\standard_3_3.fs" />
     <None Include="..\entry\resources\shaders\standard_3_3.vs" />
   </ItemGroup>

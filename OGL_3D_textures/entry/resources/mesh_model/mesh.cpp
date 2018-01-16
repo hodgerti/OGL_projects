@@ -53,6 +53,10 @@ void Mesh::Draw
 			number = std::to_string( specular_nr++ );
 			shader.set_int( ( "specularTextures[" + number + "]" ).c_str(), i );
 		}
+		else if( name == "texture_reflective" )
+		{
+			
+		}
 		else
 		{
 			cout << "ERROR: Unknown texture type: " << name << endl;

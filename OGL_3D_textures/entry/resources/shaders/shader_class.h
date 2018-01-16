@@ -26,12 +26,21 @@
 #define SINGLE_COLOR_FS_PATH SHADER_START_LOC"single_color_3_3.fs"
 #define SCREEN_VS_PATH SHADER_START_LOC"screen_3_3.vs"
 #define SCREEN_FS_PATH SHADER_START_LOC"screen_3_3.fs"
+#define SKYBOX_VS_PATH SHADER_START_LOC"3d_3_3.vs"
+#define SKYBOX_FS_PATH SHADER_START_LOC"3d_3_3.fs"
+#define MIRROR_VS_PATH SHADER_START_LOC"mirror_3_3.vs"
+#define MIRROR_FS_PATH SHADER_START_LOC"mirror_3_3.fs"
+#define REFRACTION_VS_PATH SHADER_START_LOC"refraction_3_3.vs"
+#define REFRACTION_FS_PATH SHADER_START_LOC"refraction_3_3.fs"
 
 class Shader
 {
 public:
 	// program ID
 	unsigned int ID;
+
+	// flashlight
+	bool flashlight_on_off = false;
 
 	// constuctor reads and builds the shader
 	Shader( const GLchar *vertex_path, const GLchar *fragment_path );

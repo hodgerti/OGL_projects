@@ -14,11 +14,20 @@
 #include <GLAD/glad.h>
 #include <GLFW/glfw3.h>
 #include <event_handlers\eh_buttonpresses.h>
+#include <debug_custom\custom_debugging.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
+enum 
+{
+	FACE_RIGHT,
+	FACE_LEFT,
+	FACE_UP,
+	FACE_DOWN,
+	FACE_BACK,
+	FACE_FRONT
+};
 
 class Camera
 {
@@ -34,6 +43,7 @@ public:
 	void calc_speed();
 	void update_camera( int window_width, int window_height, unsigned int ID );
 	void scroll_callback( GLFWwindow* window, double xoffset, double yoffset );
+	void mirror( int dir, glm::vec3 pos, int window_width, int window_height, unsigned int ID );
 
 private:
 	glm::vec3 camera_front  = glm::vec3(0.0f, 0.0f,  0.0f);
@@ -51,5 +61,7 @@ private:
 	float last_frame		=  0.0f;	
 	glm::mat4 view;
 	glm::mat4 proj;
+	glm::mat4 view_local;
+	glm::mat4 proj_local;
 };
 #endif
