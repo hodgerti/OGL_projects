@@ -58,7 +58,7 @@ class Mesh
 		vector<Texture> textures;
 		/* Functions	*/
 		Mesh( vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
-		void Draw( Shader shader );
+		void Draw( Shader shader, unsigned int pass_thru_tex = 0 );
 	private:
 		/* Render Data	*/
 		unsigned int VAO, VBO, EBO;

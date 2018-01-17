@@ -30,11 +30,13 @@ Mesh::Mesh
 
 void Mesh::Draw
 ( 
-	Shader shader 
+	Shader shader,
+	unsigned int pass_thru_tex
 )
 {
 	unsigned int diffuse_nr = 1;
 	unsigned int specular_nr = 1;
+	unsigned int mirror_nr = 1;
 
 	for( unsigned int i = 0; i < textures.size(); i++ )
 	{
@@ -55,7 +57,10 @@ void Mesh::Draw
 		}
 		else if( name == "texture_reflective" )
 		{
-			
+			number = std::to_string( mirror_nr++ );
+			shader.set_int( "mirrorMaterial", i );
+			glBindTexture( GL_TEXTURE_2D, pass_thru_tex );
+			continue;
 		}
 		else
 		{
@@ -66,6 +71,7 @@ void Mesh::Draw
 	}
 	shader.set_int( "diffuseNr", diffuse_nr );
 	shader.set_int( "specularNr", specular_nr );
+	shader.set_int( "mirrorNr", mirror_nr );
 	glActiveTexture( GL_TEXTURE0 );
 
 	// draw mesh

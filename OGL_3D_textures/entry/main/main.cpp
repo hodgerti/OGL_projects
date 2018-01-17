@@ -315,6 +315,8 @@ while ( !glfwWindowShouldClose( window ) )
 		standard_shader.set_mat4( "model", model );
 		lighting_standard_handler( standard_shader, buttonpress_eh );
 		glBindVertexArray( VAO_cubeprop );
+		standard_shader.set_int( "diffuseNr", 0 );
+		standard_shader.set_int( "specularNr", 0 );
 		glActiveTexture( GL_TEXTURE3 );
 		glBindTexture( GL_TEXTURE_2D, cube_texture );
 		glActiveTexture( GL_TEXTURE4 );
@@ -364,6 +366,8 @@ while ( !glfwWindowShouldClose( window ) )
 	standard_shader.set_mat4( "model", model );
 	lighting_standard_handler( standard_shader, buttonpress_eh );
 	glBindVertexArray( VAO_cubeprop );
+	standard_shader.set_int( "diffuseNr", 0 );
+	standard_shader.set_int( "specularNr", 0 );
 	glActiveTexture( GL_TEXTURE3 );
 	glBindTexture( GL_TEXTURE_2D, cube_texture );
 	glActiveTexture( GL_TEXTURE4 );
@@ -376,7 +380,7 @@ while ( !glfwWindowShouldClose( window ) )
 	model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 	standard_shader.set_mat4( "model", model );
-	nanosuit.Draw( standard_shader );
+	nanosuit.Draw( standard_shader, texture_skybox );
 
 	// skybox
 	skybox_shader.use();

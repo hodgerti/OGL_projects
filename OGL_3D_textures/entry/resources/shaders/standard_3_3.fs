@@ -63,11 +63,16 @@ uniform vec3 viewPos;
 #define MAXIMUM_TEXTURE_UNITS 16 // guarenteed 16 texture unit support
 uniform sampler2D diffuseTextures[MAXIMUM_TEXTURE_UNITS];
 uniform sampler2D specularTextures[MAXIMUM_TEXTURE_UNITS];
+
 uniform int diffuseNr; // watch out for off by 1 error
 uniform int specularNr;
+uniform int mirrorNr;
 
 // straight texture mapping
 uniform Material material;
+
+// mirror texture
+uniform samplerCube mirrorMaterial;
 
 // all light sources currently use static shinines
 #define SHININESS 32.0
@@ -84,13 +89,40 @@ vec4 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir, vec4 diffuseResul
 						
 void main()											
 {		
-	vec4 diffuseResult = texture(material.texture_diffuse, TexCoords);
-	vec4 specularResult = texture(material.texture_specular, TexCoords);
+	vec4 diffuseResult = vec4(0.0);
+	vec4 specularResult = vec4(0.0);
+	vec4 mirrorResult = vec4(0.0);
 
-//	if ( diffuseResult.a <= 0.001 )
-//	{
-//		discard;
-//	}
+	if ( diffuseNr == 0 && specularNr == 0 )
+	{
+		diffuseResult += vec4(texture(material.texture_diffuse, TexCoords));
+		specularResult += vec4(texture(material.texture_specular, TexCoords));
+
+		if ( diffuseResult.a <= 0.01 )
+		{
+			discard;
+		}
+	}
+	else
+	{
+		for ( int i = 1; i < diffuseNr; i++ )
+		{
+			diffuseResult += vec4(texture(diffuseTextures[i], TexCoords));
+		}
+		for ( int i = 1; i < specularNr; i++ )
+		{
+			specularResult += vec4(texture(specularTextures[i], TexCoords));
+		}
+		for ( int i = 1; i < mirrorNr; i++ )
+		{
+			vec3 I = normalize(FragPos - viewPos);
+			vec3 R = reflect(I, normalize(Normal));
+			//FragColor = vec4(texture(mirrorMaterial, R).rgb, 1.0);
+			mirrorResult += vec4(texture(mirrorMaterial, R).rgb, 1.0);
+			FragColor = vec4( 0.8, 0.5, 0.7, 1.0 );
+			return;
+		}
+	}
 
 	vec3 norm = normalize(Normal);
 	vec3 viewDir = normalize(FragPos - viewPos);

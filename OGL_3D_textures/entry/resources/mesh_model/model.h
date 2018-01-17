@@ -36,7 +36,7 @@ class Model
 	public:
 		/*	Functions	*/
 		Model( char *path );
-		void Draw( Shader shader );
+		void Draw( Shader shader, unsigned int pass_thru_tex = 0 );
 	private:
 		/*	Model Data	*/
 		vector<Mesh> meshes;

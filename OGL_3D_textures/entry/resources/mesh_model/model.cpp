@@ -24,12 +24,13 @@ Model::Model
 
 void Model::Draw
 (
-	Shader shader
+	Shader shader,
+	unsigned int pass_thru_tex
 )
 {
 	for( unsigned int i = 0; i < meshes.size(); i++ )
 	{
-		meshes[i].Draw( shader );
+		meshes[i].Draw( shader, pass_thru_tex );
 	}
 }
 
