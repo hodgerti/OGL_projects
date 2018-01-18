@@ -329,7 +329,7 @@ while ( !glfwWindowShouldClose( window ) )
 		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
 		standard_shader.set_mat4( "model", model );
-		nanosuit.Draw( standard_shader );
+		nanosuit.Draw( standard_shader, cube_specular_texture );
 
 		// skybox
 		skybox_shader.use();

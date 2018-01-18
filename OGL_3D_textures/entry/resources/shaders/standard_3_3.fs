@@ -117,9 +117,9 @@ void main()
 		{
 			vec3 I = normalize(FragPos - viewPos);
 			vec3 R = reflect(I, normalize(Normal));
-			//FragColor = vec4(texture(mirrorMaterial, R).rgb, 1.0);
-			mirrorResult += vec4(texture(mirrorMaterial, R).rgb, 1.0);
-			FragColor = vec4( 0.8, 0.5, 0.7, 1.0 );
+			FragColor = vec4(texture(mirrorMaterial, R).rgb, 1.0);
+			//mirrorResult += vec4(texture(mirrorMaterial, R).rgb, 1.0);
+			//FragColor = mirrorResult;
 			return;
 		}
 	}

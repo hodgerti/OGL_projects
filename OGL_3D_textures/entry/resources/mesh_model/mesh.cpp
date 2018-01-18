@@ -57,9 +57,9 @@ void Mesh::Draw
 		}
 		else if( name == "texture_reflective" )
 		{
-			number = std::to_string( mirror_nr++ );
+			mirror_nr++;
 			shader.set_int( "mirrorMaterial", i );
-			glBindTexture( GL_TEXTURE_2D, pass_thru_tex );
+			glBindTexture( GL_TEXTURE_CUBE_MAP, pass_thru_tex );
 			continue;
 		}
 		else
